@@ -1,4 +1,4 @@
-name: Generate Test Plan
+name: Generate Test Plan and Deploy Dashboard
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
       - generate_plan.py
       - Policy.yaml
       - Failures.jsonl
+      - dashboard.html
 
 jobs:
   run-plan-generator:
@@ -15,7 +16,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -30,34 +30,19 @@ jobs:
       run: |
         python generate_plan.py
 
-    - name: Upload output file
-      uses: actions/upload-artifact@v4
+    - name: Upload test plan artifact
+      uses: actions/upload-artifact@v3
       with:
         name: test-plan-output
         path: plan.json
-   
+
     - name: Setup Pages
       uses: actions/configure-pages@v3
 
-    - name: Upload dashboard.html
-      uses: actions/upload-pages-artifact@v2
+    - name: Upload dashboard to Pages
+      uses: actions/upload-pages-artifact@v1
       with:
         path: dashboard.html
 
     - name: Deploy to GitHub Pages
       uses: actions/deploy-pages@v2
-
-    - name: Send email notification
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.example.com
-        server_port: 587
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Test Plan Generated"
-        to: recipient@example.com
-        from: sender@example.com
-        body: |
-          ✅ The test plan has been successfully generated and uploaded.
-          📄 Output file: plan.json
-          🔗 GitHub Actions run: ${{ github.run_url }}
