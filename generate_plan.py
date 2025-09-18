@@ -19,7 +19,7 @@ layer_minutes = policy.get("minutes_per_impacted_layer", {})
 # Load failures.jsonl
 # -------------------------------
 incidents = []
-with open("TestData/failures.jsonl") as f:
+with open("TestData/Failures.jsonl") as f:
     for line in f:
         incidents.append(json.loads(line))
 
