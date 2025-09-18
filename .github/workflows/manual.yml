@@ -1,7 +1,6 @@
 name: Generate Plan and Deploy Dashboard
 
 on:
-  workflow_dispatch:
   push:
     branches:
       main
@@ -52,7 +51,7 @@ jobs:
     - name: Build Dashboard
       run: |
         # copy the HTML and plan.json to a publish folder
-        mkdir public
+        mkdir -p public
         cp TestResults/dashboard.html public/
         cp TestResults/plan.json public/
 
