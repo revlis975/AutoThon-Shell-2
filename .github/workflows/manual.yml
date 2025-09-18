@@ -3,7 +3,7 @@ name: Generate Plan and Deploy Dashboard
 on:
   push:
     branches:
-      main
+      - main
     paths:
       - generate_plan.py
       - Policy.yaml
