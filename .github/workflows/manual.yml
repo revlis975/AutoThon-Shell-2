@@ -9,6 +9,7 @@ on:
       - Policy.yaml
       - Failures.jsonl
       - dashboard.html
+  workflow_dispatch:
 
 jobs:
   run-plan-generator:
