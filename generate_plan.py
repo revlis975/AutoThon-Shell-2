@@ -3,7 +3,7 @@ from email.message import EmailMessage
 # -------------------------------
 # Load policy.yaml
 # -------------------------------
-with open("TestData/policy.yaml") as f:
+with open("TestData/Policy.yaml") as f:
     policy = yaml.safe_load(f)
 
 # Extract policy details
