@@ -1,0 +1,52 @@
+name: Generate Test Plan
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - generate_plan.py
+      - Policy.yaml
+      - Failures.jsonl
+
+jobs:
+  run-plan-generator:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+
+    - name: Run the script
+      run: |
+        python generate_plan.py
+
+    - name: Upload output file
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-plan-output
+        path: plan.json
+
+    - name: Send email notification
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.example.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "Test Plan Generated"
+        to: recipient@example.com
+        from: sender@example.com
+        body: |
+          ✅ The test plan has been successfully generated and uploaded.
+          📄 Output file: plan.json
+          🔗 GitHub Actions run: ${{ github.run_url }}
