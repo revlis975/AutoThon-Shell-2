@@ -72,7 +72,7 @@ plan.sort(key=lambda x: (-x["priority_score"], x["module"]))
 with open("TestResults/plan.json", "w") as f:
     json.dump(plan, f, indent=2)
 
-print(f"Processed {len(plan)} incidents. Plan saved to plan.json")
+print(f"Processed {len(plan)} incidents. Plan saved in TestResults IN JSON and CSV formats")
 
 df = pd.read_json("TestResults/plan.json")
 df.to_csv("TestResults/plan.csv", index=False)
