@@ -1,4 +1,4 @@
-name: Generate Test Plan and Deploy Dashboard
+name: Generate Plan and Deploy Dashboard
 
 on:
   workflow_dispatch:
