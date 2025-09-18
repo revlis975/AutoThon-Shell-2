@@ -51,42 +51,41 @@ def compute_plan(policy, failures_path):
         for line in f:
             if not line.strip():
                 continue
-            # rec = json.loads(line)
-            data = json.load(f)        # whole file is a JSON array
-            for rec in data:
-                module = rec.get("module")
-                env = rec.get("environment")
-                ftype = rec.get("failure_type")
-                layers = rec.get("impacted_layers") or []
-                test_id = rec.get("test_id")
+            rec = json.loads(line)
 
-            # Base minutes
-            base = sum(policy["layer_minutes"].get(l, 0) for l in layers)
+            module = rec.get("module")
+            env = rec.get("environment")
+            ftype = rec.get("failure_type")
+            layers = rec.get("impacted_layers") or []
+            test_id = rec.get("test_id")
 
-            # Multipliers
-            em = policy["env_mult"].get(env, DEFAULT_MULTIPLIER)
-            fm = policy["fail_mult"].get(ftype, DEFAULT_MULTIPLIER)
+    # Base minutes
+    base = sum(policy["layer_minutes"].get(l, 0) for l in layers)
 
-            # Final minutes with cap
-            final = base * em * fm
-            if policy["cap"] is not None:
-                final = min(final, policy["cap"])
-            final = round_half_up(final, 2)
+    # Multipliers
+    em = policy["env_mult"].get(env, DEFAULT_MULTIPLIER)
+    fm = policy["fail_mult"].get(ftype, DEFAULT_MULTIPLIER)
 
-            # Priority score
-            mp = policy["module_priority"].get(module, DEFAULT_MODULE_PRIORITY)
-            priority = round_half_up(mp * em * fm, 3)
+    # Final minutes with cap
+    final = base * em * fm
+    if policy["cap"] is not None:
+        final = min(final, policy["cap"])
+    final = round_half_up(final, 2)
 
-            out.append({
-                "test_id": test_id,
-                "module": module,
-                "environment": env,
-                "failure_type": ftype,
-                "impacted_layers": layers,
-                "Base_minutes": base,
-                "Final_minutes": final,
-                "priority_score": priority
-            })
+    # Priority score
+    mp = policy["module_priority"].get(module, DEFAULT_MODULE_PRIORITY)
+    priority = round_half_up(mp * em * fm, 3)
+
+    out.append({
+        "test_id": test_id,
+        "module": module,
+        "environment": env,
+        "failure_type": ftype,
+        "impacted_layers": layers,
+        "Base_minutes": base,
+        "Final_minutes": final,
+        "priority_score": priority
+    })
 
     # sort: primary priority desc, secondary module asc
     return sorted(out, key=lambda r: (-r["priority_score"], (r["module"] or "").lower()))

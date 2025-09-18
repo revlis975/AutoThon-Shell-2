@@ -1,0 +1,17 @@
+[
+  {
+    "test_id": "975edd64-044d-49f2-9813-996ca60fb58b",
+    "module": "Promotions & Discounts",
+    "environment": "UAT",
+    "failure_type": "External Dependency Failure",
+    "impacted_layers": [
+      "PromoService",
+      "Cache (Redis)",
+      "DB (Rules)",
+      "Client App"
+    ],
+    "Base_minutes": 36,
+    "Final_minutes": 39.6,
+    "priority_score": 3.3
+  }
+]
